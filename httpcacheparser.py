@@ -1,0 +1,79 @@
+from tqdm import tqdm
+from pathlib import Path, PosixPath
+import pickle
+import ast
+import gzip
+
+
+class HttpCacheParser(object):
+    def __init__(self, page_dir: PosixPath):
+        self.page_dir = page_dir
+        self.data = {}
+
+    def extract(self) -> dict:
+        # meta
+        self.data["meta"] = self._extract_meta()
+        self.data["pickled_meta"] = self._extract_pickled_meta()
+        # request
+        self.data["request_body"] = self._extract_request_body()
+        self.data["request_headers"] = self._extract_request_headers()
+        # response
+        self.data["response_body"] = self._extract_response_body()
+        self.data["response_headers"] = self._extract_response_headers()
+        return self.data
+
+    def list(self):
+        return list(self.page_dir.iterdir())
+
+    def _extract_pickled_meta(self):
+        with open(self.page_dir / "pickled_meta", "rb") as f:
+            pickled_meta = pickle.loads(f.read())
+        return pickled_meta
+
+    def _extract_meta(self):
+        with open(self.page_dir / "meta", "r") as f:
+            # Note:
+            # The line {'url': 'https://example.com'} has single quotes,
+            # that cannot be handled by json.loads.
+            # This is why ast.literal_eval can be used.
+            meta = ast.literal_eval(f.read())
+        return meta
+
+    def _extract_request_body(self):
+        with open(self.page_dir / "request_body", "r") as f:
+            request_body = f.read()
+        return request_body
+
+    def _extract_request_headers(self):
+        with open(self.page_dir / "request_body", "r") as f:
+            request_headers = f.read()
+        return request_headers
+
+    def _extract_response_headers(self):
+        with open(self.page_dir / "response_headers", "r") as f:
+            response_headers = f.read()
+        return response_headers
+
+    def _extract_response_body(self):
+        try:
+            with open(self.page_dir / "response_body", "r") as f:
+                response_body = f.read()
+        except:
+            with gzip.open(
+                self.page_dir / "response_body", "rt", encoding="utf-8"
+            ) as f:
+                response_body_html = f.read()
+            return response_body_html
+        return response_body
+
+
+if __name__ == "__main__":
+    from pprint import pprint
+
+    page_dir_list = list(Path("./.scrapy").glob("httpcache/crawlspider/*/*/"))
+
+    for page_dir in tqdm(page_dir_list):
+        extractor = HttpCacheParser(page_dir)
+        extractor.extract()
+
+    pprint(extractor.extract())
