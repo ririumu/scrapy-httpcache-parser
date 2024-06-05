@@ -1,4 +1,4 @@
-from http_cache_parser import HttpCacheParser
+from scrapy_http_cache_parser import HttpCacheParser
 from pathlib import Path
 from pprint import pprint
 from bs4 import BeautifulSoup
