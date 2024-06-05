@@ -1,21 +1,18 @@
 # scrapy-httpcache-parser
 
-Parse scrapy's http cache files
-`scrapy-httpcache-parser` は Scrapy HttpCacheMiddleware の保存結果を外部利用するための parser です。
+`scrapy-httpcache-parser` is a parser that enables 
+external use of data from Scrapy HttpCacheMiddleware.
 
-[] Downloader Middleware — Scrapy 2.11.2 documentation
-https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-> This middleware provides low-level cache to all HTTP requests and responses.
+Consider the following `settings.py`.
 
-たとえば以下のような `setting.py` を想定します。
-
-```
+```py
 HTTPCACHE_ENABLED = True
-HTTPCACHE_DIR = 'httpcache'
+HTTPCACHE_DIR     = 'httpcache'
 HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 ```
 
-Scrapy を実行した結果 low-level cache は以下のように保存されています。
+In this case, crawler's low-level caches is saved 
+as a collection of files like this.
 
 ```
 % cd .scrapy/httpcache/example_spider/c3/c3bed7b7ea39d4ee17d7bc494c02cad08162079c
@@ -25,9 +22,17 @@ pickled_meta            response_body
 request_body            response_headers
 ```
 
-```python
-from scrapy_http_cache_parser import ScrapyHttpCacheParser
-parser = ScrapyHttpCacheParser(".scrapy/httpcache/example_spider/c3/c3bed7b7ea39d4ee17d7bc494c02cad08162079c")
-result = parser.parse_cache()
-print(result["meta"])
+Using `scrapy-httpcache-parser`, you can use 
+this low-level cache as a cohesive Python object.
+
+```py
+>>> from scrapy_http_cache_parser import ScrapyHttpCacheParser
+>>> parser = ScrapyHttpCacheParser(".scrapy/httpcache/example_spider/c3/c3bed7b7ea39d4ee17d7bc494c02cad08162079c")
+>>> result = parser.parse_cache()
+>>> result["meta"]
+{'url': 'https://www.iana.org/time-zones', 'method': 'GET', 'status': 200, 'response_url': 'https://www.iana.org/time-zones', 'timestamp': 1717605551.076442}
 ```
+
+[] Downloader Middleware — Scrapy 2.11.2 documentation  
+https://docs.scrapy.org/en/latest/topics/downloader-middleware.html  
+> This middleware provides low-level cache to all HTTP requests and responses.  

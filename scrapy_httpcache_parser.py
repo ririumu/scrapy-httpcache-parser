@@ -5,8 +5,11 @@ import gzip
 
 
 class ScrapyHttpCacheParser(object):
-    def __init__(self, page_dir: PosixPath):
-        self.page_dir = page_dir
+    def __init__(self, page_dir: PosixPath | Path | str):
+        if isinstance(page_dir, str):
+            self.page_dir = Path(page_dir)
+        else:
+            self.page_dir = page_dir
         self.data = {}
 
     def parse_cache(self) -> dict:
