@@ -26,11 +26,10 @@ Using `scrapy-httpcache-parser`, you can use
 this low-level cache as a cohesive Python object.
 
 ```py
->>> from scrapy_http_cache_parser import ScrapyHttpCacheParser
->>> parser = ScrapyHttpCacheParser(".scrapy/httpcache/example_spider/c3/c3bed7b7ea39d4ee17d7bc494c02cad08162079c")
->>> result = parser.parse_cache()
->>> result["meta"]
-{'url': 'https://www.iana.org/time-zones', 'method': 'GET', 'status': 200, 'response_url': 'https://www.iana.org/time-zones', 'timestamp': 1717605551.076442}
+from scrapy_http_cache_parser import ScrapyHttpCacheParser
+parser = ScrapyHttpCacheParser(".scrapy/httpcache/example_spider/c3/c3bed7b7ea39d4ee17d7bc494c02cad08162079c")
+result = parser.parse_cache()
+result["meta"]
 ```
 
 [] Downloader Middleware — Scrapy 2.11.2 documentation  
