@@ -26,10 +26,10 @@ Using `scrapy-httpcache-parser`, you can use
 this low-level cache as a cohesive Python object.
 
 ```py
-from scrapy_http_cache_parser import ScrapyHttpCacheParser
+from scrapy_httpcache_parser import ScrapyHttpCacheParser
 parser = ScrapyHttpCacheParser(".scrapy/httpcache/example_spider/c3/c3bed7b7ea39d4ee17d7bc494c02cad08162079c")
 result = parser.parse_cache()
-result["meta"]
+print(result["meta"])
 ```
 
 [] Downloader Middleware — Scrapy 2.11.2 documentation  
