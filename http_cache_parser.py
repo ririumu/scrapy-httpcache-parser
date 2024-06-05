@@ -1,4 +1,3 @@
-from tqdm import tqdm
 from pathlib import Path, PosixPath
 import pickle
 import ast
@@ -65,15 +64,3 @@ class HttpCacheParser(object):
                 response_body_html = f.read()
             return response_body_html
         return response_body
-
-
-if __name__ == "__main__":
-    from pprint import pprint
-
-    page_dir_list = list(Path("./.scrapy").glob("httpcache/crawlspider/*/*/"))
-
-    for page_dir in tqdm(page_dir_list):
-        extractor = HttpCacheParser(page_dir)
-        extractor.extract()
-
-    pprint(extractor.extract())
