@@ -54,13 +54,11 @@ class HttpCacheParser(object):
         return response_headers
 
     def _extract_response_body(self):
+        path = self.page_dir / "response_body"
         try:
-            with open(self.page_dir / "response_body", "r") as f:
+            with open(path, "r") as f:
                 response_body = f.read()
         except:
-            with gzip.open(
-                self.page_dir / "response_body", "rt", encoding="utf-8"
-            ) as f:
-                response_body_html = f.read()
-            return response_body_html
+            with gzip.open(path, "rt", encoding="utf-8") as f:
+                response_body = f.read()
         return response_body
